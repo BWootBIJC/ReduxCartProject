@@ -5,11 +5,18 @@ export const shoppingCartSlice = createSlice({
     initialState: {
         isCartVisible: false,
         totalItems: [],
-        totalQuantity: 0
+        totalQuantity: 0,
+        notification: {}
     },
     reducers: {
         toggle(state) {
             state.isCartVisible = !state.isCartVisible;
+        },
+        showNotification(state, action) {
+            state.notification = { 
+                status: action.payload.status,
+                title: action.payload.title, 
+                message: action.payload.message };
         },
         addItemToCart(state: any, action: any) {
             const newItem = action.payload;

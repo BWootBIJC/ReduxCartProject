@@ -16,7 +16,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("products/list")]
+    [Route("list")]
     public IActionResult GetProducts()
     {
         try
@@ -29,5 +29,4 @@ public class ProductsController : ControllerBase
             return new BadRequestObjectResult(e);
         }
     }
-    
 }

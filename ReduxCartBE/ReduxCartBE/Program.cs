@@ -15,6 +15,16 @@ builder.Services.AddDbContext<ReduxCartDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
+});
 
 builder.Services.AddScoped<IProductQuery, ProductQuery>();
 
@@ -26,6 +36,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
