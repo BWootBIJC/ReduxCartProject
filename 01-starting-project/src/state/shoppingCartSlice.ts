@@ -13,10 +13,11 @@ export const shoppingCartSlice = createSlice({
             state.isCartVisible = !state.isCartVisible;
         },
         showNotification(state, action) {
-            state.notification = { 
+            state.notification = {
                 status: action.payload.status,
-                title: action.payload.title, 
-                message: action.payload.message };
+                title: action.payload.title,
+                message: action.payload.message
+            };
         },
         addItemToCart(state: any, action: any) {
             const newItem = action.payload;
@@ -45,8 +46,45 @@ export const shoppingCartSlice = createSlice({
                 state.totalItems = state.totalItems.filter((item: any) => item.id !== id);
             } else {
                 existingItem.quantity--;
-                existingItem.totalPrice-= existingItem.price
+                existingItem.totalPrice -= existingItem.price
             }
         },
     }
 })
+
+export const sendCartData = (cartData: any) => {
+    return async (dispatch: any) => {
+        dispatch(shoppingCartSlice.actions.showNotification({
+            status: 'pending',
+            title: "Sending...",
+            message: "Sending cart data!"
+        }));
+
+        const sendRequest = async () => {
+            const response = await fetch('api/products/list', {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                method: "PUT",
+                body: JSON.stringify(cartData)
+            });
+            if (!response.ok) {
+                throw new Error("Sending cart data failed")
+            }
+        }
+
+        try {
+            await sendRequest();
+            dispatch(shoppingCartSlice.actions.showNotification({
+                status: 'success',
+                title: "Success!",
+                message: "Sent cart data successfully!"
+            }));
+        } catch (e: any) {
+            dispatch(shoppingCartSlice.actions.showNotification({
+                status: "error",
+                title: "Error!",
+                message: "Sending cart data failed!",
+            }));        }
+    }
+}
